@@ -1,0 +1,45 @@
+package ilive_security;
+
+enum SECURITY_ERROR
+{
+    SECURITY_OK = 0;
+    SECURITY_PARAMS_INVALID = 10000;
+    SECURITY_BACK_TIMEOUT   = 10001;
+    SECURITY_INNER_ERROR    = 10002;
+    SECURITY_WORD_DIRTY_ERROR  = 10003;
+    SECURITY_WORD_SECURITY_ERROR= 10004; 
+    BOTH_SECURITY_AND_DIRTY_ERROR= 10005; 
+}
+
+enum USER_TYPE
+{
+    QQ = 0;
+    WECHAT = 7;
+    ROOMID = 4;
+    UNKNOW = 100; 
+}
+
+message SecurityReq
+{
+   optional bytes check_word = 1; 
+   optional uint32 check_mask = 2; 
+   optional uint32 svr_type = 3; 
+   optional USER_TYPE from_user_type = 4 [default = QQ];
+   optional USER_TYPE to_user_type = 5 [default = QQ];
+   optional uint64 to_uin = 6;
+   optional bytes from_nick_name = 7;
+   optional uint32 client_ip = 8;
+   optional uint32 use_white_list = 9; 
+}
+
+message SecurityRsp
+{
+   optional int32 ret_code = 1; 
+   optional uint32 sys_beat_level = 2; 
+   optional uint32 dirty_word_beat = 3; 
+}
+
+service ilive_security_svr
+{
+    rpc SecurityCheck(SecurityReq) returns(SecurityRsp);
+}
